@@ -5,6 +5,8 @@ from .util import All
 from .movie import Movie
 from .show import Show
 from .person import Person
+from .searchresults import SearchResults
+
 
 class Client:
     def __init__(self, *, api_key, loop=None, language="en-US", region="US"):
@@ -85,4 +87,4 @@ class Client:
                 for r in data.get("results", [])
             ]
 
-        return data
+        return SearchResults(self, data)
