@@ -4,6 +4,7 @@ from .movie import Movie
 from .object import Object, AttributedDict
 from .production import Company, Country, Network
 from .show import Show
+from .season import Season
 from .util import date
 
 __version__ = "0.0.1a"

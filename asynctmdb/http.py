@@ -71,3 +71,6 @@ class HTTP:
     async def get_movie(self, id, append):
         return await self.request(Request("GET", f"movie/{id}", params=self.append_dict(append)))
     
+    async def get_show(self, id, append):
+        return await self.request(Request("GET", f"tv/{id}", params=self.append_dict(append)))
+    
