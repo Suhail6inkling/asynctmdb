@@ -74,3 +74,5 @@ class HTTP:
     async def get_show(self, id, append):
         return await self.request(Request("GET", f"tv/{id}", params=self.append_dict(append)))
     
+    async def get_season(self, tvid, snum, append):
+        return await self.request(Request("GET", f"tv/{tvid}/season/{snum}", params=self.append_dict(append)))

@@ -1,4 +1,5 @@
 from .client import Client
+from .episode import Episode
 from .genre import Genre
 from .movie import Movie
 from .object import Object, AttributedDict
