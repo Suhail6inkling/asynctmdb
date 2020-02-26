@@ -1,5 +1,6 @@
 from .object import Object, AttributedDict
 from .genre import Genre
+from .person import Cast, Crew
 from .production import Company, Country
 from .util import date
 
@@ -45,7 +46,20 @@ class Movie(Object):
         for a in append:
             subdata = data.get(a)
             if subdata:
-                if a == "changes":
+                if a == "credits":
+                    cast = [
+                        Cast(self, x)
+                        for x in subdata.get("cast")
+                    ]
+                    crew = [
+                        Crew(self, x)
+                        for x in subdata.get("crew")
+                    ]
+                    subdata["cast"] = cast
+                    subdata["crew"] = crew
+
+                    setattr(self, a, AttributedDict(**subdata))
+                elif a == "changes":
                     subdata = subdata["changes"]
                     subdata = [AttributedDict(
                         key=v["key"],
@@ -59,7 +73,7 @@ class Movie(Object):
                         for v in subdata
                     ]
                     setattr(self, a, subdata)
-                #TODO - Credits, Similar Movies, Dates? Videos?
+                #TODO - Similar Movies, Dates? Videos?
                 elif len(subdata.keys()) == 1:
                     key = list(subdata.keys())[0]
                     setattr(self, a, subdata[key])

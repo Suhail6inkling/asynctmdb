@@ -1,4 +1,5 @@
 from .object import Object
+from .person import Cast, Crew
 
 class Episode(Object):
     def __init__(self, season, data):
@@ -13,7 +14,9 @@ class Episode(Object):
         self.production_code = data.get("production_code")
         self.still = self.client.still(data)
 
-        #TODO - crew, guest_stars
+        self.crew = [Crew(self, x) for x in data.get("crew")]
+
+        self.guest_stars = [Cast(self, x) for x in data.get("crew")]
 
         self._data = data
 

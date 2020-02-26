@@ -1,5 +1,6 @@
 from .object import Object, AttributedDict
 from .genre import Genre
+from .person import Person, Cast, Crew
 from .production import Company, Country, Network
 from .season import Season
 from .util import date
@@ -32,7 +33,7 @@ class Show(Object):
 
         self.__init__(self.client, data)
 
-        #TODO - created_by
+        self.created_by = [Person(self.client, x) for x in data.get("created_by")]
         self.genres = [Genre(self.client, x) for x in data.get("genres", [])]
         self.production_companies = [Company(self.client, x) for x in data.get("production_companies")]
         self.networks = [Network(self.client, x) for x in data.get("networks")]
@@ -52,7 +53,20 @@ class Show(Object):
         for a in append:
             subdata = data.get(a)
             if subdata:
-                if a == "changes":
+                if a == "credits":
+                    cast = [
+                        Cast(self, x)
+                        for x in subdata.get("cast")
+                    ]
+                    crew = [
+                        Crew(self, x)
+                        for x in subdata.get("crew")
+                    ]
+                    subdata["cast"] = cast
+                    subdata["crew"] = crew
+
+                    setattr(self, a, AttributedDict(**subdata))
+                elif a == "changes":
                     subdata = subdata["changes"]
                     subdata = [AttributedDict(
                         key=v["key"],
@@ -66,7 +80,7 @@ class Show(Object):
                         for v in subdata
                     ]
                     setattr(self, a, subdata)
-                #TODO - Credits, Similar Shows, Dates? Videos?
+                #TODO - Similar Shows, Dates? Videos?
                 elif len(subdata.keys()) == 1:
                     key = list(subdata.keys())[0]
                     setattr(self, a, subdata[key])
