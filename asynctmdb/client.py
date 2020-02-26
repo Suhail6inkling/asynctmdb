@@ -18,3 +18,31 @@ class Client:
     async def _initialize(self):
         data = await self.http.get_config()
         self.config = data["images"]
+
+
+    def urlmaker(self, type, url):
+        if isinstance(url, dict):
+            url = url.get(f"{type}_path")
+        
+        if not url: return
+
+        base = self.config["secure_base_url"]
+        size = self.config[f"{type}_sizes"][-2]
+
+        return base+size+url
+
+
+    def poster(self, url):
+        return self.urlmaker("poster", url)
+        
+    def logo(self, url):
+        return self.urlmaker("logo", url)
+    
+    def backdrop(self, url):
+        return self.urlmaker("backdrop", url)
+
+    def still(self, url):
+        return self.urlmaker("still", url)
+    
+    def profile(self, url):
+        return self.urlmaker("profile", url)
