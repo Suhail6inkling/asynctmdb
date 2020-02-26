@@ -43,6 +43,14 @@ class HTTP:
     def language(self):
         return self.client.language
 
+    @staticmethod
+    def append_dict(append):
+        return {
+            "append_to_response": (
+                ",".join(append)
+            )
+        }
+
     async def request(self, req, override = False):
         if not self.client.config and not override:
             await self.client._initialize()
@@ -60,3 +68,6 @@ class HTTP:
     async def get_config(self):
         return await self.request(Request("GET", "configuration"), override=True)
 
+    async def get_movie(self, id, append):
+        return await self.request(Request("GET", f"movie/{id}", params=self.append_dict(append)))
+    
