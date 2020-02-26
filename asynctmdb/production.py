@@ -21,3 +21,16 @@ class Country(Object):
 
     def __repr__(self):
         return f"<Country name={self.name!r}>"
+
+class Network(Object):
+    
+    def __init__(self, client, data):
+        self.client = client
+        self.name = data.get("name")
+        self.id = data.get("id")
+        self.logo = client.logo(data)
+        self.country = data.get("origin_country")
+    
+    def __repr__(self):
+        return f"<Network name={self.name!r} id={self.id!r}>"
+    
