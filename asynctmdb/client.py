@@ -1,6 +1,10 @@
 import asyncio
 
 from .http import HTTP
+from .util import All
+from .movie import Movie
+from .show import Show
+from .person import Person
 
 class Client:
     def __init__(self, *, api_key, loop=None, language="en-US", region="US"):
@@ -46,3 +50,39 @@ class Client:
     
     def profile(self, url):
         return self.urlmaker("profile", url)
+
+    async def search(self, query, *, cls=All, **params):
+        dictionary = {
+            Movie: "movie",
+            Show: "tv",
+            All: "multi",
+            Person: "person"
+        }
+
+        reverse_dict = {
+            "movie": Movie,
+            "tv": Show,
+            "person": Person
+        }
+
+        model = dictionary.get(cls)
+        if not model:
+            raise Exception #TODO - subclass
+        
+        params.update(query=query)
+
+        data = await self.http.search(model, payload=params)
+
+        data["query"] = params["query"]
+        if cls == All:
+            data["results"] = [
+                reverse_dict[r["media_type"]](self, r)
+                for r in data.get("results", [])
+            ]
+        else:
+            data["results"] = [
+                cls(self, r)
+                for r in data.get("results", [])
+            ]
+
+        return data

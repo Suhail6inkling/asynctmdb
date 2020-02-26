@@ -68,6 +68,9 @@ class HTTP:
     async def get_config(self):
         return await self.request(Request("GET", "configuration"), override=True)
 
+    async def search(self, model, payload):
+        return await self.request(Request("GET", f"search/{model}", params=payload))
+    
     async def get_movie(self, id, append):
         return await self.request(Request("GET", f"movie/{id}", params=self.append_dict(append)))
     
