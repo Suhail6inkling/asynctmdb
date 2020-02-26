@@ -40,6 +40,8 @@ class Movie(Object):
         self.production_countries = [Country(self.client, x) for x in data.get("production_countries")]
         self.tagline = data.get("tagline")
         self.status = data.get("status")
+        self.runtime = data.get("runtime")
+        self.revenue = data.get("revenue")
 
         self.expanded = True
         
@@ -66,16 +68,16 @@ class Movie(Object):
                         items=AttributedDict(**v["items"])
                     ) for v in subdata]
                     setattr(self, a, subdata)
-                elif a == "keywords":
-                    subdata = subdata["keywords"]
-                    subdata = [
-                        AttributedDict(**v)
-                        for v in subdata
-                    ]
-                    setattr(self, a, subdata)
                 #TODO - Similar Movies, Dates? Videos?
                 elif len(subdata.keys()) == 1:
                     key = list(subdata.keys())[0]
-                    setattr(self, a, subdata[key])
+                    value = subdata[key]
+                    if isinstance(value, list):
+                        subdata = [AttributedDict(**a) if isinstance(a, dict) else a for a in value]
+                        setattr(self, a, subdata)
+                    elif isinstance(value, dict):
+                        setattr(self, a, AttributedDict(**value))
+                    else:
+                        setattr(self, a, subdata[key])
                 else:
                     setattr(self, a, AttributedDict(**subdata))
