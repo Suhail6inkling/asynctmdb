@@ -6,3 +6,7 @@ class Object:
             except:
                 return super().__eq__(other)
         return super().__eq__(other)
+
+class AttributedDict(Object):
+    def __init__(self, **kwargs):
+        self.__dict__.update(**kwargs)
