@@ -29,3 +29,48 @@ class Person(Object):
     def __repr__(self):
         return f"<Person name={self.name!r} id={self.id!r}>"
 
+    #TODO - Expand
+        
+class Cast(Person):
+    
+    def __init__(self, item, data):
+        self.item = item
+
+        super().__init__(item.client, data)
+
+        gender = data.get("gender")
+        dictionary = {
+            1: "Female",
+            2: "Male"
+        }
+        self.gender = dictionary.get(gender)
+        self.character = data.get("character")
+        self.credit_id = data.get("credit_id")
+        self.order = data.get("order")
+        self.cast_id = data.get("cast_id")
+
+    #TODO - Expand + __repr__
+
+class Crew(Person):
+
+    def __init__(self, item, data):
+        self.item = item
+
+        super().__init__(item.client, data)
+
+        gender = data.get("gender")
+        dictionary = {
+            1: "Female",
+            2: "Male"
+        }
+        self.gender = dictionary.get(gender)
+
+        self.department = data.get("department")
+        self.job = data.get("job")
+        self.credit_id = data.get("credit_id")
+
+    #TODO - Expand + __repr__
+
+
+
+
