@@ -1,6 +1,7 @@
 from .object import Object
 from .person import Cast, Crew
 
+
 class Episode(Object):
     def __init__(self, season, data):
         self.season = season
@@ -22,4 +23,3 @@ class Episode(Object):
 
     def __repr__(self):
         return f"<Episode name={self.name!r} episode_number={self.episode_number!r} id={self.id!r} season={self.season!r}>"
-    

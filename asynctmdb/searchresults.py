@@ -1,7 +1,7 @@
 from .object import Object
 
-class SearchResults(Object):
 
+class SearchResults(Object):
     def __init__(self, client, data):
         self.client = client
 

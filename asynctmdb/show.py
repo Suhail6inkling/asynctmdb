@@ -5,6 +5,7 @@ from .production import Company, Country, Network
 from .season import Season
 from .util import date
 
+
 class Show(Object):
     def __init__(self, client, data):
         self.client = client
@@ -22,10 +23,10 @@ class Show(Object):
 
         self._data = data
         self.expanded = False
-    
+
     def __repr__(self):
         return f"<Show name={self.name!r} id={self.id!r} expanded={self.expanded!r}>"
-    
+
     async def expand(self, *append):
         data = await self.client.http.get_show(self.id, append)
 
@@ -35,7 +36,9 @@ class Show(Object):
 
         self.created_by = [Person(self.client, x) for x in data.get("created_by")]
         self.genres = [Genre(self.client, x) for x in data.get("genres", [])]
-        self.production_companies = [Company(self.client, x) for x in data.get("production_companies")]
+        self.production_companies = [
+            Company(self.client, x) for x in data.get("production_companies")
+        ]
         self.networks = [Network(self.client, x) for x in data.get("networks")]
         self.tagline = data.get("tagline")
         self.status = data.get("status")
@@ -54,31 +57,28 @@ class Show(Object):
             subdata = data.get(a)
             if subdata:
                 if a == "credits":
-                    cast = [
-                        Cast(self, x)
-                        for x in subdata.get("cast")
-                    ]
-                    crew = [
-                        Crew(self, x)
-                        for x in subdata.get("crew")
-                    ]
+                    cast = [Cast(self, x) for x in subdata.get("cast")]
+                    crew = [Crew(self, x) for x in subdata.get("crew")]
                     subdata["cast"] = cast
                     subdata["crew"] = crew
 
                     setattr(self, a, AttributedDict(**subdata))
                 elif a == "changes":
                     subdata = subdata["changes"]
-                    subdata = [AttributedDict(
-                        key=v["key"],
-                        items=AttributedDict(**v["items"])
-                    ) for v in subdata]
+                    subdata = [
+                        AttributedDict(key=v["key"], items=AttributedDict(**v["items"]))
+                        for v in subdata
+                    ]
                     setattr(self, a, subdata)
-                #TODO - Similar Shows, Dates? Videos?
+                # TODO - Similar Shows, Dates? Videos?
                 elif len(subdata.keys()) == 1:
                     key = list(subdata.keys())[0]
                     value = subdata[key]
                     if isinstance(value, list):
-                        subdata = [AttributedDict(**a) if isinstance(a, dict) else a for a in value]
+                        subdata = [
+                            AttributedDict(**a) if isinstance(a, dict) else a
+                            for a in value
+                        ]
                         setattr(self, a, subdata)
                     elif isinstance(value, dict):
                         setattr(self, a, AttributedDict(**value))
