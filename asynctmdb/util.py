@@ -4,4 +4,4 @@ All = "All"
 
 
 def date(dt):
-    datetime.strptime(dt, "%Y-%m-%d").date()
+    return datetime.strptime(dt, "%Y-%m-%d").date()
