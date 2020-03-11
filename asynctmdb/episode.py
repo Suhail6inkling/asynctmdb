@@ -1,5 +1,6 @@
 from .object import Object
 from .person import Cast, Crew
+from .util import date
 
 
 class Episode(Object):
@@ -8,6 +9,8 @@ class Episode(Object):
         self.show = season.show
         self.client = season.client
 
+        rd = data.get("air_date")
+        self.air_date = rd and date(rd)
         self.name = data.get("name")
         self.id = data.get("id")
         self.overview = data.get("overview")
@@ -17,7 +20,7 @@ class Episode(Object):
 
         self.crew = [Crew(self, x) for x in data.get("crew")]
 
-        self.guest_stars = [Cast(self, x) for x in data.get("crew")]
+        self.guest_stars = [Cast(self, x) for x in data.get("guest_stars")]
 
         self._data = data
 
